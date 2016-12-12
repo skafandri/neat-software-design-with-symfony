@@ -8,7 +8,7 @@
  Achieving or improving one of this areas requires different techniques and patterns which often pull in different directions.
  For example, an online banking system can't afford to have a [Login with Facebook] button to increase it's usability.
 
- Scalability is a problem that we are trying to solve since forever (assuming that we consider the apparition of computers as the beginning of the world).
+ Scalability is a problem that we are trying to solve since forever (assuming that we consider the apparition of computers as the beginning of life).
 
  The first scalability challenge I encountered in my life was to store a computer program on more than one floppy disc (yes, this was horizontal scalability). Some time later, I had to change many programs to run on 32 bit processors. Couple of years later, again, let's support processors with more than one core.
  Fast forward closer to present time, we need to write programs and/or alter existing ones to run on multiple computers.
@@ -617,3 +617,99 @@ Because the definition of what a software architecture should include is: The im
 We already wrote a good deal of business logic (did we?). Let's **plug in** Symfony into our application and see what it can offer.
 
 # Plugging Symfony in
+
+## Install Symfony
+
+What is Symfony? A web framework, right? What does that means exactly?
+Symfony is simply a collection of useful components or libraries that provides solutions to common problems we are trying to solve in web development.
+At the time of writing, Symfony ships with 34 components, you can check the full list at `vendor/symfony/symfony/src/Symfony/Component/`.
+Programmers are lazy, especially the good ones.
+That's why in addition to those components, Symfony ships also with some *gluing* code that wires those components together.
+If you use the Symfony installer, it works out of the box.
+Unfortunately, for many programmers this will remain a *black box*. And I keep hearing *non sense* statements like "oh, Symfony3 has many changes, now **the console** is in `bin/console` not in `app/console` anymore!". Really, what about `symfony/my-awesome-console`?
+What we will do next it to unwrap the *Symfony box* slowly so we can understand better how it works. I should warn you, it is way easier than you might think it is.
+
+First, Symfony is a PHP library installable with composer, just like any other package.
+
+````
+composer require symfony/symfony
+````
+
+We are done, we can start testing our first *Symfony application*. We will indeed create a console application in **symfony/my-awesome-console**.
+
+````
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$application = new \Symfony\Component\Console\Application();
+$application->add(new \Symfony\Component\Console\Command\Command('test'));
+$application->run();
+````
+
+Let's run it
+
+````
+$ php symfony/my-awesome-console
+Console Tool
+
+Usage:
+  command [options] [arguments]
+
+Options:
+  -h, --help            Display this help message
+  -q, --quiet           Do not output any message
+  -V, --version         Display this application version
+      --ansi            Force ANSI output
+      --no-ansi         Disable ANSI output
+  -n, --no-interaction  Do not ask any interactive question
+  -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Available commands:
+  help  Displays help for a command
+  list  Lists commands
+  test
+````  
+
+Looks familiar? Yes, that's the Symfony console component in action. Let's try to run a command.
+
+````
+$ php symfony/my-awesome-console test
+
+  [Symfony\Component\Console\Exception\LogicException]                   
+  You must override the execute() method in the concrete command class.  
+
+test
+````
+
+The error message is self explanatory.
+It means that we need to extend the `Command` class and override the `execute` method.
+Since this is a throw away code that we will use just to get a better understanding, let's create the command within the console file.
+We will edit **symfony/my-awesome-console** and add our super simple command.
+
+````
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+class TestCommand extends \Symfony\Component\Console\Command\Command
+{
+
+    protected function execute(
+        \Symfony\Component\Console\Input\InputInterface $input,
+        \Symfony\Component\Console\Output\OutputInterface $output
+    )
+    {
+        $output->writeln('This is a test command');
+        $output->writeln('<info>This is an info message</info>');
+        $output->writeln('<error>This is an error message</error>');
+    }
+
+}
+
+$application = new \Symfony\Component\Console\Application();
+$application->add(new TestCommand('test'));
+$application->run();
+````
+
+Run the command again. Hmmm, it works. 
