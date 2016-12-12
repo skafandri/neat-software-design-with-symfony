@@ -602,7 +602,7 @@ the next piece of code I write gets a little better.
 So my advice is learn about your domain and practice. Nothing beats experience here.
 
 There is a mistake I noticed beginner programmers make often.
-They get stuck in a detail, sometime to the extent of solving the wrong problem, or solving it in very efficient way.
+They get stuck in a detail, sometime to the extent of solving the wrong problem, or solving it in very inefficient way.
 In order to make the best decisions, you should always keep the *bird view* on the code.
 I personally literally push back my chair and take a global view at the whole application frequently.
 The position has no physical impact to improve my view of the code.
@@ -712,4 +712,4 @@ $application->add(new TestCommand('test'));
 $application->run();
 ````
 
-Run the command again. Hmmm, it works. 
+Run the command again. Hmmm, it works.
